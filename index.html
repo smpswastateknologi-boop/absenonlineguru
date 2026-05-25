@@ -173,10 +173,6 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3">
-                    <!-- Location Bypass Alert for testing -->
-                    <div id="bypassBadge" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-[11px] px-3 py-1 rounded-full font-bold">
-                        <i class="fa-solid fa-unlock-keyhole mr-1"></i> Bypass Lokasi Aktif
-                    </div>
                     <button onclick="checkCurrentLocation(true)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-4 py-2 rounded-xl transition duration-200 flex items-center gap-1.5">
                         <i class="fa-solid fa-arrows-rotate"></i> Perbarui Lokasi
                     </button>
@@ -491,10 +487,6 @@
                                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Radius Toleransi (Meter)</label>
                                     <input id="configRadius" type="number" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500">
                                 </div>
-                                <div class="flex items-center gap-2 mt-2">
-                                    <input id="configBypassOption" type="checkbox" onchange="toggleLocationBypass(this.checked)" class="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4">
-                                    <label for="configBypassOption" class="text-xs font-bold text-amber-700">Aktifkan Bypass Lokasi (Untuk Demo/Uji Coba)</label>
-                                </div>
                                 <div class="flex gap-2 pt-1">
                                     <button onclick="saveLocationConfig()" class="flex-grow bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-lg text-xs transition duration-150">
                                         Simpan Koordinat
@@ -725,13 +717,14 @@
         let ctx = null;
         let signatureDataUrl = ""; // Stored Base64 String representation
 
-        // NEW: Geolocation State & Default Target (Kendari, Sultra - Dekat Titik Koordinat Pengguna)
-        let schoolLocation = {
-            latitude: -3.9722, // Koordinat Default SMP ST Lintang
+        // PERSISTENCE ENGINE: Load school location safely from localStorage if exists
+        let storedLocation = localStorage.getItem('school_location_config');
+        let schoolLocation = storedLocation ? JSON.parse(storedLocation) : {
+            latitude: -3.9722,  // Koordinat Default SMP ST Lintang
             longitude: 122.5149, // Koordinat Default SMP ST Bujur
-            radius: 50, // Batas Aman Radius (Meter)
-            bypass: false // Opsi Bypass Khusus Admin
+            radius: 50           // Batas Aman Radius (Meter)
         };
+        
         let currentUserLocation = null;
         let isLocationValid = false;
 
@@ -802,7 +795,7 @@
             targetRecordTimeEl.textContent = `${timeStr} WITA`;
         }
 
-        // NEW: Geolocation & Distance Calculation (Haversine Formula)
+        // Geolocation & Distance Calculation (Haversine Formula)
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371e3; // Earth radius in meters
             const phi1 = lat1 * Math.PI / 180;
@@ -818,36 +811,18 @@
             return R * c; // In meters
         }
 
-        // NEW: Check Location and Validate Radius
+        // Check Location and Validate Radius
         function checkCurrentLocation(forceAlert = false) {
             const iconBg = document.getElementById('locationIconBg');
             const icon = document.getElementById('locationIcon');
             const text = document.getElementById('locationStatusText');
             const submitBtn = document.getElementById('submitAbsenBtn');
             const submitBtnNotice = document.getElementById('submitBtnNotice');
-            const bypassBadge = document.getElementById('bypassBadge');
 
             // Reset loading state
             icon.className = "fa-solid fa-location-crosshairs text-xl animate-spin";
             iconBg.className = "p-3 bg-slate-100 text-slate-500 rounded-xl";
             text.textContent = "Melacak posisi koordinat GPS...";
-
-            // Check if bypass option is on
-            if (schoolLocation.bypass) {
-                isLocationValid = true;
-                icon.className = "fa-solid fa-unlock-keyhole text-xl";
-                iconBg.className = "p-3 bg-amber-100 text-amber-600 rounded-xl";
-                text.textContent = "Bypass Lokasi Sekolah Aktif (Mode Uji Coba Admin).";
-                
-                submitBtn.disabled = false;
-                submitBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-100 transition duration-150 flex items-center justify-center gap-2";
-                submitBtnNotice.className = "text-[10px] text-emerald-600 font-bold text-center mt-1";
-                submitBtnNotice.textContent = "✓ Lokasi divalidasi via Bypass Admin.";
-                bypassBadge.classList.remove('hidden');
-                return;
-            } else {
-                bypassBadge.classList.add('hidden');
-            }
 
             if (!navigator.geolocation) {
                 text.textContent = "Fitur GPS Geolocation tidak didukung peramban ini.";
@@ -1411,7 +1386,6 @@
         }
 
         // Delete Row Function
-        // Delete Row Function
         function deleteRecord(id) {
             attendanceRecords = attendanceRecords.filter(rec => rec.id !== id);
             renderTable();
@@ -1460,11 +1434,10 @@
                 mainPanel.classList.remove('hidden');
                 renderAdminTeachers();
                 
-                // Set default geolocation values on input configs
+                // Set default geolocation values on input configs from active schoolLocation
                 document.getElementById('configLat').value = schoolLocation.latitude;
                 document.getElementById('configLng').value = schoolLocation.longitude;
                 document.getElementById('configRadius').value = schoolLocation.radius;
-                document.getElementById('configBypassOption').checked = schoolLocation.bypass;
                 
                 // Initialize Charts when admin logs in successfully
                 setTimeout(() => {
@@ -1490,7 +1463,7 @@
             }
         }
 
-        // NEW: Save Location Config from Admin Panel
+        // PERSISTENCE & CONTROL: Save Location Config from Admin Panel into Persistent LocalStorage
         function saveLocationConfig() {
             const lat = parseFloat(document.getElementById('configLat').value);
             const lng = parseFloat(document.getElementById('configLng').value);
@@ -1501,15 +1474,19 @@
                 return;
             }
 
+            // Update in-memory state
             schoolLocation.latitude = lat;
             schoolLocation.longitude = lng;
             schoolLocation.radius = rad;
 
-            showCustomAlert("Koordinat Diperbarui", `Sistem geofencing sekolah diperbarui ke koordinat (${lat}, ${lng}) dengan radius ${rad} meter.`, true);
+            // Save to localStorage for permanent storage
+            localStorage.setItem('school_location_config', JSON.stringify(schoolLocation));
+
+            showCustomAlert("Koordinat Disimpan Permanen", `Sistem geofencing sekolah diperbarui ke koordinat (${lat}, ${lng}) dengan radius ${rad} meter.`, true);
             checkCurrentLocation(false);
         }
 
-        // NEW: Reset/Force current user GPS coordinates to default target
+        // GEOLOCATION ACTION: Reset/Force current user GPS coordinates to default target dynamically
         function resetLocationConfigToDefault() {
             if (!navigator.geolocation) {
                 alert("Browser Anda tidak mendukung pelacakan koordinat GPS.");
@@ -1520,18 +1497,13 @@
                 (position) => {
                     document.getElementById('configLat').value = position.coords.latitude;
                     document.getElementById('configLng').value = position.coords.longitude;
-                    alert("✓ Berhasil menyalin koordinat GPS Anda saat ini ke form konfigurasi. Tekan 'Simpan Koordinat' untuk menerapkan.");
+                    alert("✓ Berhasil mendeteksi lokasi GPS Anda rill saat ini. Jangan lupa untuk menekan tombol 'Simpan Koordinat' di bawah untuk menerapkan perubahan.");
                 },
                 (error) => {
-                    alert("Gagal melacak GPS Anda. Pastikan izin lokasi aktif.");
-                }
+                    alert("Gagal melacak lokasi GPS perangkat Anda. Pastikan izin berbagi lokasi telah aktif di pengaturan browser Anda.");
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
             );
-        }
-
-        // NEW: Toggle Bypass
-        function toggleLocationBypass(checked) {
-            schoolLocation.bypass = checked;
-            checkCurrentLocation(false);
         }
 
         // Chart.js Engine Implementation for Admin Dashboard
