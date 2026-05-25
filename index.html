@@ -119,7 +119,7 @@
     <!-- Main Content Container -->
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        <!-- Live Date & Time Indicator (Mobile friendly) -->
+        <!-- Live Date & Time Indicator -->
         <div class="no-print bg-white border border-slate-200 rounded-2xl p-4 mb-6 flex flex-col sm:flex-row justify-between items-center gap-3 shadow-sm">
             <div class="flex items-center gap-2">
                 <span class="flex h-3.5 w-3.5 relative">
@@ -131,7 +131,7 @@
             <div class="text-sm font-extrabold text-slate-700" id="liveDate">Senin, 25 Mei 2026</div>
         </div>
 
-        <!-- TAB 1: PRESENSI GURU PANEL -->
+        <!-- TAB 1: PRESENSI GURU PANEL (SEKARANG BERSIH & FOKUS PADA FORM MANDIRI GURU) -->
         <div id="sectionPresensi" class="space-y-8">
             
             <!-- Welcome Rules Panel -->
@@ -153,8 +153,10 @@
                         <ul class="space-y-2 text-emerald-50 font-medium">
                             <li class="flex justify-between"><span>Mulai Absen Masuk:</span> <span class="font-bold text-white">06:30 WITA</span></li>
                             <li class="flex justify-between"><span>Batas Tepat Waktu:</span> <span class="font-bold text-emerald-300">s.d 07:15 WITA</span></li>
-                            <li class="flex justify-between"><span>Datang Terlambat:</span> <span class="font-bold text-amber-300">&gt; 07:15 WITA</span></li>
-                            <li class="flex justify-between"><span>Pulang Cepat:</span> <span class="font-bold text-rose-300">&gt; 09:00 s.d 13:00 WITA</span></li>
+                            <li class="flex justify-between"><span>Datang Terlambat:</span> <span class="font-bold text-amber-300">07:16 s.d 11:00 WITA</span></li>
+                            <li class="flex justify-between"><span>Dianggap Tidak Hadir:</span> <span class="font-bold text-red-300">11:01 s.d 13:00 WITA</span></li>
+                            <li class="flex justify-between"><span>Jam Pulang Normal:</span> <span class="font-bold text-emerald-300">13:00 WITA</span></li>
+                            <li class="flex justify-between"><span>Pulang Cepat:</span> <span class="font-bold text-rose-300">09:01 s.d 12:59 WITA</span></li>
                             <li class="flex justify-between"><span>Pulang Lembur:</span> <span class="font-bold text-cyan-300">&gt; 13:00 WITA</span></li>
                         </ul>
                     </div>
@@ -179,196 +181,82 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
-                <!-- Left Side: Absen Form -->
-                <div class="no-print lg:col-span-5 space-y-6">
-                    <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm relative overflow-hidden">
-                        <h3 class="text-lg font-bold text-slate-900 mb-5 pb-3 border-b border-slate-100 flex items-center gap-2">
-                            <i class="fa-solid fa-fingerprint text-emerald-600"></i> Form Presensi Guru
-                        </h3>
-
-                        <form id="attendanceForm" onsubmit="triggerVerificationFlow(event)" class="space-y-4">
-                            <!-- Select Guru -->
-                            <div>
-                                <label for="teacherSelect" class="block text-xs font-bold text-slate-600 uppercase mb-1.5">Pilih Nama Guru</label>
-                                <div class="relative">
-                                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
-                                        <i class="fa-solid fa-user-tie"></i>
-                                    </span>
-                                    <select id="teacherSelect" required class="block w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm font-semibold focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-150">
-                                        <option value="" disabled selected>-- Pilih Guru --</option>
-                                        <!-- Will be filled dynamically by JS -->
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Scan / Action Type -->
-                            <div>
-                                <label class="block text-xs font-bold text-slate-600 uppercase mb-1.5">Tipe Presensi</label>
-                                <div class="grid grid-cols-2 gap-3 font-semibold">
-                                    <label class="relative flex items-center justify-center p-3.5 border border-emerald-100 bg-emerald-50/20 rounded-xl cursor-pointer hover:bg-emerald-50/50 transition">
-                                        <input type="radio" name="attendanceType" value="MASUK" checked class="sr-only" id="typeMasuk">
-                                        <div class="text-center">
-                                            <i class="fa-solid fa-right-to-bracket text-lg text-emerald-600 mb-1"></i>
-                                            <p class="text-xs font-bold text-slate-800">ABSEN MASUK</p>
-                                        </div>
-                                    </label>
-
-                                    <label class="relative flex items-center justify-center p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition">
-                                        <input type="radio" name="attendanceType" value="PULANG" class="sr-only" id="typePulang">
-                                        <div class="text-center">
-                                            <i class="fa-solid fa-right-from-bracket text-lg text-rose-600 mb-1"></i>
-                                            <p class="text-xs font-bold text-slate-800">ABSEN PULANG</p>
-                                        </div>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <!-- Current Time Logged -->
-                            <div class="bg-emerald-50/50 rounded-xl p-3 border border-emerald-100 flex justify-between items-center text-xs">
-                                <span class="font-medium text-slate-600">Waktu yang akan dicatat:</span>
-                                <span id="targetRecordTime" class="font-extrabold text-emerald-700 text-sm">09:48 WITA</span>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <button id="submitAbsenBtn" type="submit" disabled class="w-full bg-slate-300 text-slate-500 cursor-not-allowed font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-150 flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-shield-halved"></i> Verifikasi & TTD Online
-                            </button>
-                            <p id="submitBtnNotice" class="text-[10px] text-rose-500 font-semibold text-center mt-1">Harap tunggu, verifikasi lokasi sekolah sedang berlangsung...</p>
-                        </form>
+            <!-- FORM GURU (TENGAH TAMPILAN GUNA MAKSIMAL ESTETIKA) -->
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-md relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-bl-full pointer-events-none flex items-center justify-center">
+                        <i class="fa-solid fa-fingerprint text-emerald-200 text-3xl"></i>
                     </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-6 pb-3 border-b border-slate-100 flex items-center gap-2.5">
+                        <i class="fa-solid fa-user-check text-emerald-600"></i> Form Presensi Guru
+                    </h3>
 
-                    <!-- Custom Alert Notification container (Replaces native alerts) -->
-                    <div id="customAlert" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-4 flex items-start gap-3 relative animate-slide-up shadow-sm">
-                        <span class="text-emerald-500 text-lg"><i class="fa-solid fa-circle-check"></i></span>
-                        <div class="flex-grow">
-                            <h4 id="alertTitle" class="font-bold text-sm">Berhasil Absen!</h4>
-                            <p id="alertDesc" class="text-xs mt-0.5 text-emerald-700">Presensi Masuk berhasil dicatat pukul 07:10 WITA.</p>
+                    <form id="attendanceForm" onsubmit="triggerVerificationFlow(event)" class="space-y-5">
+                        <!-- Select Guru -->
+                        <div>
+                            <label for="teacherSelect" class="block text-xs font-bold text-slate-600 uppercase mb-2">Pilih Nama Guru</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 pointer-events-none">
+                                    <i class="fa-solid fa-user-tie text-emerald-600"></i>
+                                </span>
+                                <select id="teacherSelect" required class="block w-full pl-10 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm font-semibold focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition duration-150">
+                                    <option value="" disabled selected>-- Pilih Guru --</option>
+                                    <!-- Will be filled dynamically by JS -->
+                                </select>
+                            </div>
                         </div>
-                        <button onclick="hideCustomAlert()" class="text-emerald-400 hover:text-emerald-600 text-sm absolute top-3 right-3">
-                            <i class="fa-solid fa-xmark"></i>
+
+                        <!-- Scan / Action Type -->
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Tipe Presensi</label>
+                            <div class="grid grid-cols-2 gap-4 font-semibold">
+                                <label class="relative flex items-center justify-center p-4 border border-emerald-100 bg-emerald-50/20 rounded-xl cursor-pointer hover:bg-emerald-50/50 transition shadow-sm">
+                                    <input type="radio" name="attendanceType" value="MASUK" checked class="sr-only" id="typeMasuk">
+                                    <div class="text-center">
+                                        <i class="fa-solid fa-right-to-bracket text-2xl text-emerald-600 mb-1.5"></i>
+                                        <p class="text-xs font-extrabold text-slate-800 tracking-wider">ABSEN MASUK</p>
+                                    </div>
+                                </label>
+
+                                <label class="relative flex items-center justify-center p-4 border border-slate-200 rounded-xl cursor-pointer hover:bg-slate-50 transition shadow-sm">
+                                    <input type="radio" name="attendanceType" value="PULANG" class="sr-only" id="typePulang">
+                                    <div class="text-center">
+                                        <i class="fa-solid fa-right-from-bracket text-2xl text-rose-600 mb-1.5"></i>
+                                        <p class="text-xs font-extrabold text-slate-800 tracking-wider">ABSEN PULANG</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Current Time Logged -->
+                        <div class="bg-emerald-50/50 rounded-xl p-4 border border-emerald-100 flex justify-between items-center text-xs">
+                            <span class="font-bold text-slate-600">Waktu yang akan dicatat:</span>
+                            <span id="targetRecordTime" class="font-extrabold text-emerald-700 text-sm">09:48 WITA</span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button id="submitAbsenBtn" type="submit" disabled class="w-full bg-slate-300 text-slate-500 cursor-not-allowed font-bold py-4 px-4 rounded-xl shadow-lg transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-shield-halved"></i> Verifikasi & TTD Online
                         </button>
-                    </div>
+                        <p id="submitBtnNotice" class="text-[11px] text-rose-500 font-bold text-center mt-1">Harap tunggu, verifikasi lokasi sekolah sedang berlangsung...</p>
+                    </form>
                 </div>
 
-                <!-- Right Side: Dashboard Statistics & Logs -->
-                <div class="lg:col-span-7 space-y-6 print-full">
-                    
-                    <!-- Quick Dashboard Stats Cards -->
-                    <div class="no-print grid grid-cols-2 sm:grid-cols-4 gap-4">
-                        <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[10px] font-extrabold text-slate-500 uppercase">Tepat Waktu</span>
-                                <span class="text-emerald-600 bg-emerald-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-check"></i></span>
-                            </div>
-                            <h4 id="countOntime" class="text-2xl font-extrabold text-slate-900">0</h4>
-                            <p class="text-[10px] text-slate-400 mt-1">&lt;= 07:15 WITA</p>
-                        </div>
-
-                        <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[10px] font-extrabold text-slate-500 uppercase">Terlambat</span>
-                                <span class="text-amber-600 bg-amber-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                            </div>
-                            <h4 id="countLate" class="text-2xl font-extrabold text-slate-900">0</h4>
-                            <p class="text-[10px] text-slate-400 mt-1">&gt; 07:15 WITA</p>
-                        </div>
-
-                        <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[10px] font-extrabold text-slate-500 uppercase">Pulang Cepat</span>
-                                <span class="text-rose-600 bg-rose-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-person-running"></i></span>
-                            </div>
-                            <h4 id="countEarly" class="text-2xl font-extrabold text-slate-900">0</h4>
-                            <p class="text-[10px] text-slate-400 mt-1">s.d 13:00 WITA</p>
-                        </div>
-
-                        <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[10px] font-extrabold text-slate-500 uppercase">Lembur</span>
-                                <span class="text-blue-600 bg-blue-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-business-time"></i></span>
-                            </div>
-                            <h4 id="countOvertime" class="text-2xl font-extrabold text-slate-900">0</h4>
-                            <p class="text-[10px] text-slate-400 mt-1">&gt; 13:00 WITA</p>
-                        </div>
+                <!-- Custom Alert Notification container (Replaces native alerts) -->
+                <div id="customAlert" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl p-4 flex items-start gap-3 relative animate-slide-up shadow-sm mt-6">
+                    <span class="text-emerald-500 text-lg"><i class="fa-solid fa-circle-check"></i></span>
+                    <div class="flex-grow">
+                        <h4 id="alertTitle" class="font-bold text-sm">Berhasil Absen!</h4>
+                        <p id="alertDesc" class="text-xs mt-0.5 text-emerald-700">Presensi Masuk berhasil dicatat pukul 07:10 WITA.</p>
                     </div>
-
-                    <!-- Live Attendance Log List -->
-                    <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden print-full">
-                        <!-- Table Header Controls -->
-                        <div class="no-print p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                            <div>
-                                <h3 class="font-bold text-slate-900 flex items-center gap-2 text-base">
-                                    <i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Riwayat Absensi Guru Hari Ini
-                                </h3>
-                                <p class="text-xs text-slate-500">Daftar kehadiran real-time yang dilengkapi validasi biometrik & TTD</p>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                                <!-- Search Bar -->
-                                <div class="relative flex-grow sm:flex-grow-0">
-                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs"><i class="fa-solid fa-magnifying-glass"></i></span>
-                                    <input id="searchQuery" oninput="renderTable()" type="text" placeholder="Cari nama..." class="w-full sm:w-44 pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                </div>
-                                <!-- Export Button -->
-                                <button onclick="window.print()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
-                                    <i class="fa-solid fa-print"></i> Cetak Rekap
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Filter Tabs -->
-                        <div class="no-print bg-slate-50 px-5 py-2.5 border-b border-slate-100 flex flex-wrap gap-1 text-xs">
-                            <button onclick="setFilterStatus('ALL')" id="filterTab-ALL" class="px-3 py-1 rounded-full font-bold transition bg-emerald-600 text-white shadow-sm">
-                                Semua (<span id="totalBadge">0</span>)
-                            </button>
-                            <button onclick="setFilterStatus('Masuk Tepat Waktu')" id="filterTab-Ontime" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
-                                Tepat Waktu (<span id="ontimeBadge">0</span>)
-                            </button>
-                            <button onclick="setFilterStatus('Terlambat')" id="filterTab-Late" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
-                                Terlambat (<span id="lateBadge">0</span>)
-                            </button>
-                            <button onclick="setFilterStatus('Pulang Cepat')" id="filterTab-Early" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
-                                Pulang Cepat (<span id="earlyBadge">0</span>)
-                            </button>
-                            <button onclick="setFilterStatus('Pulang Lembur')" id="filterTab-Overtime" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
-                                Lembur (<span id="overtimeBadge">0</span>)
-                            </button>
-                        </div>
-
-                        <!-- Actual Table UI -->
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="bg-slate-50 text-slate-400 text-[10px] uppercase font-extrabold tracking-wider border-b border-slate-100">
-                                        <th class="py-3 px-5">No</th>
-                                        <th class="py-3 px-5">Nama Guru</th>
-                                        <th class="py-3 px-5">Tipe</th>
-                                        <th class="py-3 px-5">Waktu WITA</th>
-                                        <th class="py-3 px-5">Tanda Tangan</th>
-                                        <th class="py-3 px-5">Keterangan Aturan</th>
-                                        <th class="py-3 px-5 no-print">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="attendanceTableBody" class="divide-y divide-slate-100 text-sm text-slate-700">
-                                    <tr id="emptyRow">
-                                        <td colspan="7" class="py-12 text-center text-slate-400">
-                                            <div class="flex flex-col items-center justify-center space-y-2">
-                                                <i class="fa-solid fa-clipboard-question text-3xl text-slate-300"></i>
-                                                <p class="text-xs font-semibold">Belum ada aktivitas presensi terdata hari ini.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
+                    <button onclick="hideCustomAlert()" class="text-emerald-400 hover:text-emerald-600 text-sm absolute top-3 right-3">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: MENU ADMIN (PASSWORD PROTECTED) -->
+        <!-- TAB 2: MENU ADMIN (PASSWORD PROTECTED & MEMILIKI DASHBOARD STATISTIK + TABEL RIWAYAT) -->
         <div id="sectionAdmin" class="hidden space-y-8">
             <!-- Authentication Gate -->
             <div id="adminAuthGate" class="max-w-md mx-auto bg-white border border-slate-200 rounded-2xl p-6 shadow-md">
@@ -398,7 +286,9 @@
             </div>
 
             <!-- Authentic Admin Panel Dashboard -->
-            <div id="adminMainPanel" class="hidden space-y-6">
+            <div id="adminMainPanel" class="hidden space-y-8">
+                
+                <!-- Admin Header Controls -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div>
                         <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
@@ -409,6 +299,54 @@
                     <button onclick="handleAdminLogout()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
                         <i class="fa-solid fa-right-from-bracket"></i> Log Out Admin
                     </button>
+                </div>
+
+                <!-- STATS CARDS: MONITORING PENUH -->
+                <div class="no-print grid grid-cols-2 sm:grid-cols-5 gap-4">
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-extrabold text-slate-500 uppercase">Tepat Waktu</span>
+                            <span class="text-emerald-600 bg-emerald-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-check"></i></span>
+                        </div>
+                        <h4 id="countOntime" class="text-2xl font-extrabold text-slate-900">0</h4>
+                        <p class="text-[10px] text-slate-400 mt-1">Masuk/Pulang Normal</p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-extrabold text-slate-500 uppercase">Terlambat</span>
+                            <span class="text-amber-600 bg-amber-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                        </div>
+                        <h4 id="countLate" class="text-2xl font-extrabold text-slate-900">0</h4>
+                        <p class="text-[10px] text-slate-400 mt-1">07:16-11:00 WITA</p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-extrabold text-slate-500 uppercase">Tidak Hadir</span>
+                            <span class="text-red-600 bg-red-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-user-slash"></i></span>
+                        </div>
+                        <h4 id="countAbsent" class="text-2xl font-extrabold text-slate-900">0</h4>
+                        <p class="text-[10px] text-slate-400 mt-1">11:01-13:00 WITA</p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-extrabold text-slate-500 uppercase">Pulang Cepat</span>
+                            <span class="text-rose-600 bg-rose-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-person-running"></i></span>
+                        </div>
+                        <h4 id="countEarly" class="text-2xl font-extrabold text-slate-900">0</h4>
+                        <p class="text-[10px] text-slate-400 mt-1">s.d 13:00 WITA</p>
+                    </div>
+
+                    <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-[10px] font-extrabold text-slate-500 uppercase">Lembur</span>
+                            <span class="text-blue-600 bg-blue-50 text-[10px] px-1.5 py-0.5 rounded-md font-bold"><i class="fa-solid fa-business-time"></i></span>
+                        </div>
+                        <h4 id="countOvertime" class="text-2xl font-extrabold text-slate-900">0</h4>
+                        <p class="text-[10px] text-slate-400 mt-1">&gt; 13:00 WITA</p>
+                    </div>
                 </div>
 
                 <!-- Charts Analysis Dashboard (Grafik Analisis) -->
@@ -440,20 +378,24 @@
                                 <canvas id="statusTodayChart"></canvas>
                             </div>
                         </div>
-                        <div class="border-t border-slate-100 pt-3 mt-4 flex justify-around text-center text-[10px] font-extrabold text-slate-500">
-                            <div>
+                        <div class="border-t border-slate-100 pt-3 mt-4 flex flex-wrap justify-around text-center text-[9px] font-extrabold text-slate-500">
+                            <div class="px-1">
                                 <span class="block w-2.5 h-2.5 bg-emerald-500 rounded-full mx-auto mb-1"></span>
                                 Tepat Waktu
                             </div>
-                            <div>
+                            <div class="px-1">
                                 <span class="block w-2.5 h-2.5 bg-amber-500 rounded-full mx-auto mb-1"></span>
                                 Terlambat
                             </div>
-                            <div>
+                            <div class="px-1">
+                                <span class="block w-2.5 h-2.5 bg-red-500 rounded-full mx-auto mb-1"></span>
+                                Tdk Hadir
+                            </div>
+                            <div class="px-1">
                                 <span class="block w-2.5 h-2.5 bg-rose-500 rounded-full mx-auto mb-1"></span>
                                 Plg Cepat
                             </div>
-                            <div>
+                            <div class="px-1">
                                 <span class="block w-2.5 h-2.5 bg-cyan-500 rounded-full mx-auto mb-1"></span>
                                 Lembur
                             </div>
@@ -461,9 +403,123 @@
                     </div>
                 </div>
 
+                <!-- EDIT LOG PRESENSI FORM (Dinamis Muncul Saat Tombol Edit Ditekan) -->
+                <div id="editLogFormContainer" class="hidden bg-emerald-50 border border-emerald-200 p-6 rounded-2xl shadow-sm no-print">
+                    <h3 class="font-bold text-slate-900 text-sm mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-user-pen text-emerald-600"></i> Form Edit Data Presensi Guru (Admin)
+                    </h3>
+                    <input type="hidden" id="editLogId">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs font-semibold">
+                        <div>
+                            <label class="block text-[10px] text-slate-500 uppercase mb-1">Nama Guru</label>
+                            <input type="text" id="editLogName" disabled class="w-full px-3 py-2 bg-slate-200 text-slate-500 border border-slate-300 rounded-lg cursor-not-allowed">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 uppercase mb-1">Tipe Presensi</label>
+                            <select id="editLogType" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg">
+                                <option value="MASUK">MASUK</option>
+                                <option value="PULANG">PULANG</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 uppercase mb-1">Waktu Presensi (WITA)</label>
+                            <input type="text" id="editLogTime" placeholder="Contoh: 07:10" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 uppercase mb-1">Status Aturan</label>
+                            <select id="editLogStatus" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg">
+                                <option value="Masuk Tepat Waktu">Masuk Tepat Waktu</option>
+                                <option value="Terlambat">Terlambat</option>
+                                <option value="Dianggap Tidak Hadir">Dianggap Tidak Hadir</option>
+                                <option value="Pulang Normal">Pulang Normal</option>
+                                <option value="Pulang Cepat">Pulang Cepat</option>
+                                <option value="Pulang Lembur">Pulang Lembur</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2 mt-4 text-xs font-bold">
+                        <button onclick="cancelEditLog()" class="px-4 py-2 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition">Batal</button>
+                        <button onclick="saveEditLog()" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition">Simpan Perubahan</button>
+                    </div>
+                </div>
+
+                <!-- RIWAYAT ABSENSI: DIPINDAHKAN DI MENU ADMIN AGAR TERJAGA PRIVASINYA -->
+                <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden print-full">
+                    <!-- Table Header Controls -->
+                    <div class="no-print p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="font-bold text-slate-900 flex items-center gap-2 text-base">
+                                <i class="fa-solid fa-clock-rotate-left text-emerald-600"></i> Riwayat Absensi Guru Hari Ini (Logs Admin)
+                            </h3>
+                            <p class="text-xs text-slate-500">Daftar kehadiran real-time yang dilengkapi validasi biometrik & TTD</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                            <!-- Search Bar -->
+                            <div class="relative flex-grow sm:flex-grow-0">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400 text-xs"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                <input id="searchQuery" oninput="renderTable()" type="text" placeholder="Cari nama..." class="w-full sm:w-44 pl-8 pr-3 py-1.5 border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            </div>
+                            <!-- Export Button -->
+                            <button onclick="window.print()" class="bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-semibold text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-print"></i> Cetak Rekap
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Tabs -->
+                    <div class="no-print bg-slate-50 px-5 py-2.5 border-b border-slate-100 flex flex-wrap gap-1 text-xs">
+                        <button onclick="setFilterStatus('ALL')" id="filterTab-ALL" class="px-3 py-1 rounded-full font-bold transition bg-emerald-600 text-white shadow-sm">
+                            Semua (<span id="totalBadge">0</span>)
+                        </button>
+                        <button onclick="setFilterStatus('Masuk Tepat Waktu')" id="filterTab-Ontime" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
+                            Tepat Waktu (<span id="ontimeBadge">0</span>)
+                        </button>
+                        <button onclick="setFilterStatus('Terlambat')" id="filterTab-Late" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
+                            Terlambat (<span id="lateBadge">0</span>)
+                        </button>
+                        <button onclick="setFilterStatus('Dianggap Tidak Hadir')" id="filterTab-Absent" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
+                            Tidak Hadir (<span id="absentBadge">0</span>)
+                        </button>
+                        <button onclick="setFilterStatus('Pulang Cepat')" id="filterTab-Early" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
+                            Pulang Cepat (<span id="earlyBadge">0</span>)
+                        </button>
+                        <button onclick="setFilterStatus('Pulang Lembur')" id="filterTab-Overtime" class="px-3 py-1 rounded-full font-semibold transition text-slate-600 hover:bg-slate-200">
+                            Lembur (<span id="overtimeBadge">0</span>)
+                        </button>
+                    </div>
+
+                    <!-- Actual Table UI -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-400 text-[10px] uppercase font-extrabold tracking-wider border-b border-slate-100">
+                                    <th class="py-3 px-5">No</th>
+                                    <th class="py-3 px-5">Nama Guru</th>
+                                    <th class="py-3 px-5">Tipe</th>
+                                    <th class="py-3 px-5">Waktu WITA</th>
+                                    <th class="py-3 px-5">Tanda Tangan</th>
+                                    <th class="py-3 px-5">Keterangan Aturan</th>
+                                    <th class="py-3 px-5 no-print">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendanceTableBody" class="divide-y divide-slate-100 text-sm text-slate-700">
+                                <tr id="emptyRow">
+                                    <td colspan="7" class="py-12 text-center text-slate-400">
+                                        <div class="flex flex-col items-center justify-center space-y-2">
+                                            <i class="fa-solid fa-clipboard-question text-3xl text-slate-300"></i>
+                                            <p class="text-xs font-semibold">Belum ada aktivitas presensi terdata hari ini.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bottom Config & Actions Grid -->
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
-                    <!-- Left Column: Manage Teachers List & Export Section -->
+                    <!-- Left Column: Settings -->
                     <div class="lg:col-span-5 space-y-6">
                         
                         <!-- CONFIG: Geofencing Coordinates Config -->
@@ -574,7 +630,7 @@
                         </div>
                     </div>
 
-                    <!-- Right Column: Teachers Database & Quick Action List -->
+                    <!-- Right Column: Teachers Database -->
                     <div class="lg:col-span-7 space-y-6">
                         <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
                             <div class="p-5 border-b border-slate-100">
@@ -615,7 +671,7 @@
 
             <!-- STEP 1 CONTAINER: FACE VERIFICATION -->
             <div id="stepFaceContainer" class="p-6 flex flex-col items-center">
-                <!-- Sandbox/Permissions Notice (Shows up only if camera check has failed or falls back) -->
+                <!-- Sandbox/Permissions Notice -->
                 <div id="cameraHelpNotice" class="hidden w-full mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl flex items-start gap-2 animate-fade-in">
                     <i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5"></i>
                     <div>
@@ -690,7 +746,7 @@
                 </button>
             </div>
 
-            <!-- Footer Batal Button (Hanya tampil di Langkah 1 & 2 sebelum Submit) -->
+            <!-- Footer Batal Button -->
             <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2 text-xs">
                 <button onclick="closeVerificationFlow()" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-100">Batal</button>
             </div>
@@ -728,8 +784,9 @@
         let currentUserLocation = null;
         let isLocationValid = false;
 
-        // PRE-POPULATED DATABASE: Data guru baru sesuai request
-        let teachers = [
+        // PERSISTENCE ENGINE: Load dynamic teachers list if exists, otherwise fallback to the default list of 10 teachers
+        let storedTeachers = localStorage.getItem('school_teachers');
+        let teachers = storedTeachers ? JSON.parse(storedTeachers) : [
             "La Sarfia, S.Pd (Kepala Sekolah)",
             "La Ndasi, S.Kom (Guru Informatika)",
             "Sitti Rahmatia, S.Pd (Guru Pendidikan Agama & Budi Pekerti)",
@@ -742,8 +799,9 @@
             "Wa Ode Dina, S.Pd (Guru Prakarya)"
         ];
 
-        // CLEANED DATABASE: Empty array for today's logs
-        let attendanceRecords = [];
+        // PERSISTENCE ENGINE: Load active logs from storage
+        let storedRecords = localStorage.getItem('school_attendance_records');
+        let attendanceRecords = storedRecords ? JSON.parse(storedRecords) : [];
 
         // Media Stream pointer
         let cameraStream = null;
@@ -754,6 +812,12 @@
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
             const now = new Date();
             return `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+        }
+
+        // Save data to localStorage to guarantee two-way integration persists on reload
+        function persistDatabase() {
+            localStorage.setItem('school_teachers', JSON.stringify(teachers));
+            localStorage.setItem('school_attendance_records', JSON.stringify(attendanceRecords));
         }
 
         // Switching Primary Navigation Tabs
@@ -769,7 +833,7 @@
                 tabAdminBtn.className = "px-3.5 py-2 rounded-lg text-slate-500 hover:text-slate-900 transition-all flex items-center gap-1.5";
                 sectionPresensi.classList.remove('hidden');
                 sectionAdmin.classList.add('hidden');
-                checkCurrentLocation(false); // Re-run quiet check when back to presensi tab
+                checkCurrentLocation(false); // Re-run check when back to presensi tab
             } else {
                 tabAdminBtn.className = "px-3.5 py-2 rounded-lg bg-white text-slate-900 shadow-sm transition-all flex items-center gap-1.5";
                 tabPresensiBtn.className = "px-3.5 py-2 rounded-lg text-slate-500 hover:text-slate-900 transition-all flex items-center gap-1.5";
@@ -856,7 +920,7 @@
                         
                         // Enable absensi form submit button
                         submitBtn.disabled = false;
-                        submitBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg shadow-emerald-100 transition duration-150 flex items-center justify-center gap-2";
+                        submitBtn.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 px-4 rounded-xl shadow-lg shadow-emerald-100 transition duration-150 flex items-center justify-center gap-2";
                         submitBtnNotice.className = "text-[10px] text-emerald-600 font-bold text-center mt-1";
                         submitBtnNotice.textContent = "✓ Sinyal GPS Terverifikasi. Anda siap absen.";
                         
@@ -896,8 +960,8 @@
             const submitBtnNotice = document.getElementById('submitBtnNotice');
             
             submitBtn.disabled = true;
-            submitBtn.className = "w-full bg-slate-300 text-slate-500 cursor-not-allowed font-bold py-3.5 px-4 rounded-xl shadow-lg transition duration-150 flex items-center justify-center gap-2";
-            submitBtnNotice.className = "text-[10px] text-rose-500 font-semibold text-center mt-1";
+            submitBtn.className = "w-full bg-slate-300 text-slate-500 cursor-not-allowed font-bold py-4 px-4 rounded-xl shadow-lg transition duration-150 flex items-center justify-center gap-2";
+            submitBtnNotice.className = "text-[10px] text-rose-500 font-bold text-center mt-1";
             submitBtnNotice.textContent = message;
         }
 
@@ -918,30 +982,6 @@
                 option.textContent = teacher;
                 selectEl.appendChild(option);
             });
-        }
-
-        // Custom alert notifications
-        function showCustomAlert(title, message, isSuccess = true) {
-            const alertBox = document.getElementById('customAlert');
-            const alertTitle = document.getElementById('alertTitle');
-            const alertDesc = document.getElementById('alertDesc');
-            
-            alertTitle.textContent = title;
-            alertDesc.textContent = message;
-            
-            alertBox.className = isSuccess 
-                ? "bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl p-4 flex items-start gap-3 relative animate-slide-up shadow-sm mt-3"
-                : "bg-amber-50 border border-amber-200 text-amber-800 rounded-xl p-4 flex items-start gap-3 relative animate-slide-up shadow-sm mt-3";
-            
-            const iconSpan = alertBox.querySelector('span');
-            iconSpan.className = isSuccess ? "text-emerald-500 text-lg" : "text-amber-500 text-lg";
-            iconSpan.innerHTML = isSuccess ? '<i class="fa-solid fa-circle-check"></i>' : '<i class="fa-solid fa-circle-exclamation"></i>';
-
-            alertBox.classList.remove('hidden');
-        }
-
-        function hideCustomAlert() {
-            document.getElementById('customAlert').classList.add('hidden');
         }
 
         // VERIFICATION & SIGNATURE MULTI-STEP FLOW
@@ -1210,6 +1250,7 @@
             const currentMinutes = timeToMinutes(currentTimeStr);
             const startLimitMinutes = timeToMinutes("06:30"); // 06.30 WITA
             const lateLimitMinutes = timeToMinutes("07:15");  // 07.15 WITA
+            const lateLimitMaxMinutes = timeToMinutes("11:00"); // 11.00 WITA
             const earlyLimitMinutes = timeToMinutes("09:00"); // 09.00 WITA
             const overtimeLimitMinutes = timeToMinutes("13:00"); // 13.00 WITA
 
@@ -1222,25 +1263,42 @@
                     return;
                 }
 
-                if (currentMinutes > lateLimitMinutes) {
+                // Rule: Datang Terlambat (07:16 s.d 11:00 WITA)
+                if (currentMinutes > lateLimitMinutes && currentMinutes <= lateLimitMaxMinutes) {
                     status = "Terlambat";
                     const diff = currentMinutes - lateLimitMinutes;
-                    details = `Terlambat ${diff} menit (Melebihi batas toleransi 07:15)`;
-                } else {
+                    details = `Terlambat ${diff} menit (Batas toleransi ketetapan masuk sekolah: 07:15)`;
+                } 
+                // Rule: Dianggap Tidak Hadir (11:01 s.d 13:00 WITA)
+                else if (currentMinutes > lateLimitMaxMinutes && currentMinutes <= overtimeLimitMinutes) {
+                    status = "Dianggap Tidak Hadir";
+                    details = "Melebihi batas maksimal keterlambatan (11:00 WITA). Kehadiran otomatis hangus.";
+                } 
+                // Rule: Di atas 13:00 WITA (tidak bisa masuk, karena sudah jam kepulangan)
+                else if (currentMinutes > overtimeLimitMinutes) {
+                    status = "Dianggap Tidak Hadir";
+                    details = "Absen dilakukan setelah operasional sekolah berakhir (&gt; 13:00 WITA).";
+                } 
+                else {
                     status = "Masuk Tepat Waktu";
                     details = "Masuk tepat waktu dan siap mengajar.";
                 }
             } else if (typeValue === "PULANG") {
-                if (currentMinutes > earlyLimitMinutes && currentMinutes <= overtimeLimitMinutes) {
+                // Rule: Jam pulang operasional sekolah adalah 13:00 WITA
+                if (currentMinutes > earlyLimitMinutes && currentMinutes < overtimeLimitMinutes) {
                     status = "Pulang Cepat";
-                    details = "Keluar sebelum batas normal pulang operasional sekolah (13:00).";
+                    details = "Keluar sebelum jam pulang operasional sekolah (13:00 WITA).";
                 } 
+                else if (currentMinutes === overtimeLimitMinutes) {
+                    status = "Pulang Normal";
+                    details = "Pulang tepat waktu sesuai jam operasional sekolah (13:00 WITA).";
+                }
                 else if (currentMinutes > overtimeLimitMinutes) {
                     status = "Pulang Lembur";
-                    details = "Pulang Lembur (Tambahan Jam Kerja &gt; 13:00)";
+                    details = "Pulang Lembur (Tambahan Jam Kerja di atas pukul 13:00 WITA)";
                 } else {
                     status = "Pulang Sangat Cepat";
-                    details = "Pulang terlalu pagi (sebelum batas minimum kepulangan pukul 09:00).";
+                    details = "Pulang terlalu pagi (sebelum batas minimum kepulangan pukul 09:00 WITA).";
                 }
             }
 
@@ -1258,6 +1316,9 @@
             // Add to the front of list
             attendanceRecords.unshift(newRecord);
             
+            // Persist Database to LocalStorage for integration stability
+            persistDatabase();
+
             // Success Feedbacks
             showCustomAlert(
                 `Berhasil Absen ${typeValue === 'MASUK' ? 'Masuk' : 'Pulang'}!`,
@@ -1267,12 +1328,12 @@
             // Reset selection dropdown
             teacherSelect.selectedIndex = 0;
 
-            // Update UI Rendering
-            renderTable();
+            // Update UI Rendering (Hanya jika admin sedang login, logs akan ter-update di tabel rahasia)
+            if (isAdminAuthenticated) {
+                renderTable();
+                updateAdminCharts();
+            }
             updateStatistics();
-            
-            // Dynamic update to the charts if active
-            updateAdminCharts();
         }
 
         // Set Filter Tab
@@ -1283,6 +1344,7 @@
                 'ALL': 'filterTab-ALL',
                 'Masuk Tepat Waktu': 'filterTab-Ontime',
                 'Terlambat': 'filterTab-Late',
+                'Dianggap Tidak Hadir': 'filterTab-Absent',
                 'Pulang Cepat': 'filterTab-Early',
                 'Pulang Lembur': 'filterTab-Overtime'
             };
@@ -1301,17 +1363,25 @@
             renderTable();
         }
 
-        // Render Logs Table Rows with Signature Preview
+        // Render Logs Table Rows with Signature Preview (Hanya dirender di dalam Tab Admin)
         function renderTable() {
             const tableBody = document.getElementById('attendanceTableBody');
             const searchVal = document.getElementById('searchQuery').value.toLowerCase();
             
+            if (!tableBody) return;
             tableBody.innerHTML = "";
 
             let filteredList = attendanceRecords.filter(rec => {
                 const matchSearch = rec.name.toLowerCase().includes(searchVal);
-                const matchFilter = activeFilter === 'ALL' || rec.status === activeFilter;
-                return matchSearch && matchFilter;
+                let statusMatch = false;
+                if (activeFilter === 'ALL') {
+                    statusMatch = true;
+                } else if (activeFilter === 'Masuk Tepat Waktu') {
+                    statusMatch = (rec.status === 'Masuk Tepat Waktu' || rec.status === 'Pulang Normal');
+                } else {
+                    statusMatch = (rec.status === activeFilter);
+                }
+                return matchSearch && statusMatch;
             });
 
             if (filteredList.length === 0) {
@@ -1340,10 +1410,14 @@
 
                 switch(rec.status) {
                     case "Masuk Tepat Waktu":
+                    case "Pulang Normal":
                         badgeStyle = "bg-emerald-100 text-emerald-800 text-xs font-semibold px-2 py-1 rounded-md";
                         break;
                     case "Terlambat":
                         badgeStyle = "bg-amber-100 text-amber-800 text-xs font-semibold px-2 py-1 rounded-md";
+                        break;
+                    case "Dianggap Tidak Hadir":
+                        badgeStyle = "bg-red-100 text-red-800 text-xs font-semibold px-2 py-1 rounded-md";
                         break;
                     case "Pulang Cepat":
                         badgeStyle = "bg-rose-100 text-rose-800 text-xs font-semibold px-2 py-1 rounded-md";
@@ -1375,7 +1449,10 @@
                         <span class="${badgeStyle}">${rec.status}</span>
                         <p class="text-[10px] text-slate-500 mt-1 font-medium">${rec.details}</p>
                     </td>
-                    <td class="py-4 px-5 no-print">
+                    <td class="py-4 px-5 no-print flex items-center gap-1">
+                        <button onclick="startEditLog('${rec.id}')" class="text-slate-400 hover:text-emerald-600 transition p-1.5 rounded-lg hover:bg-emerald-50" title="Edit Data">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
                         <button onclick="deleteRecord('${rec.id}')" class="text-slate-400 hover:text-rose-600 transition p-1.5 rounded-lg hover:bg-rose-50" title="Hapus Data">
                             <i class="fa-regular fa-trash-can"></i>
                         </button>
@@ -1385,42 +1462,126 @@
             });
         }
 
-        // Delete Row Function
-        function deleteRecord(id) {
-            attendanceRecords = attendanceRecords.filter(rec => rec.id !== id);
+        // INTEGRATION FLOW: Admin Edit Logs Functions
+        function startEditLog(id) {
+            const rec = attendanceRecords.find(r => r.id === id);
+            if (!rec) return;
+
+            document.getElementById('editLogId').value = rec.id;
+            document.getElementById('editLogName').value = rec.name;
+            document.getElementById('editLogType').value = rec.type;
+            document.getElementById('editLogTime').value = rec.time;
+            document.getElementById('editLogStatus').value = rec.status;
+
+            // Scroll elegantly to the edit form container
+            const formContainer = document.getElementById('editLogFormContainer');
+            formContainer.classList.remove('hidden');
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function cancelEditLog() {
+            document.getElementById('editLogFormContainer').classList.add('hidden');
+        }
+
+        function saveEditLog() {
+            const id = document.getElementById('editLogId').value;
+            const recIdx = attendanceRecords.findIndex(r => r.id === id);
+            if (recIdx === -1) return;
+
+            const updatedType = document.getElementById('editLogType').value;
+            const updatedTime = document.getElementById('editLogTime').value.trim();
+            const updatedStatus = document.getElementById('editLogStatus').value;
+
+            // Simple time format validation (HH:MM)
+            if (!/^\d{2}:\d{2}$/.test(updatedTime)) {
+                alert("Mohon masukkan format waktu yang valid (Contoh: 07:15).");
+                return;
+            }
+
+            // Update details based on new status
+            let updatedDetails = "";
+            switch(updatedStatus) {
+                case "Masuk Tepat Waktu":
+                    updatedDetails = "Masuk tepat waktu dan siap mengajar.";
+                    break;
+                case "Terlambat":
+                    updatedDetails = "Disunting oleh Admin (Sebelumnya terlambat)";
+                    break;
+                case "Dianggap Tidak Hadir":
+                    updatedDetails = "Disunting oleh Admin (Melebihi batas toleransi keterlambatan)";
+                    break;
+                case "Pulang Normal":
+                    updatedDetails = "Pulang tepat waktu sesuai jam operasional sekolah (13:00 WITA).";
+                    break;
+                case "Pulang Cepat":
+                    updatedDetails = "Disunting oleh Admin (Keluar sebelum pukul 13:00 WITA)";
+                    break;
+                case "Pulang Lembur":
+                    updatedDetails = "Disunting oleh Admin (Lembur kerja di atas 13:00 WITA)";
+                    break;
+            }
+
+            // Save updates to list
+            attendanceRecords[recIdx].type = updatedType;
+            attendanceRecords[recIdx].time = updatedTime;
+            attendanceRecords[recIdx].status = updatedStatus;
+            attendanceRecords[recIdx].details = updatedDetails;
+
+            // Persist the changes to LocalStorage
+            persistDatabase();
+
+            // Re-render UI
             renderTable();
             updateStatistics();
-            showCustomAlert("Terhapus", "Satu rekaman absensi berhasil dihapus.", false);
-            
-            // Dynamic update to the charts
             updateAdminCharts();
+
+            // Hide Form Edit
+            document.getElementById('editLogFormContainer').classList.add('hidden');
+            showCustomAlert("Perubahan Disimpan", `Data presensi guru berhasil diperbarui secara permanen.`, true);
         }
 
         // Calculate and Update Dashboard Badges
         function updateStatistics() {
             let ontime = 0;
             let late = 0;
+            let absent = 0;
             let early = 0;
             let overtime = 0;
 
             attendanceRecords.forEach(rec => {
-                if (rec.status === "Masuk Tepat Waktu") ontime++;
+                if (rec.status === "Masuk Tepat Waktu" || rec.status === "Pulang Normal") ontime++;
                 if (rec.status === "Terlambat") late++;
+                if (rec.status === "Dianggap Tidak Hadir") absent++;
                 if (rec.status === "Pulang Cepat") early++;
                 if (rec.status === "Pulang Lembur") overtime++;
             });
 
-            document.getElementById('countOntime').textContent = ontime;
-            document.getElementById('countLate').textContent = late;
-            document.getElementById('countEarly').textContent = early;
-            document.getElementById('countOvertime').textContent = overtime;
+            const ontimeEl = document.getElementById('countOntime');
+            const lateEl = document.getElementById('countLate');
+            const absentEl = document.getElementById('countAbsent');
+            const earlyEl = document.getElementById('countEarly');
+            const overtimeEl = document.getElementById('countOvertime');
 
-            // Badges in filters
-            document.getElementById('totalBadge').textContent = attendanceRecords.length;
-            document.getElementById('ontimeBadge').textContent = ontime;
-            document.getElementById('lateBadge').textContent = late;
-            document.getElementById('earlyBadge').textContent = early;
-            document.getElementById('overtimeBadge').textContent = overtime;
+            if (ontimeEl) ontimeEl.textContent = ontime;
+            if (lateEl) lateEl.textContent = late;
+            if (absentEl) absentEl.textContent = absent;
+            if (earlyEl) earlyEl.textContent = early;
+            if (overtimeEl) overtimeEl.textContent = overtime;
+
+            // Badges in filters inside admin panel
+            const totalBadge = document.getElementById('totalBadge');
+            const ontimeBadge = document.getElementById('ontimeBadge');
+            const lateBadge = document.getElementById('lateBadge');
+            const absentBadge = document.getElementById('absentBadge');
+            const earlyBadge = document.getElementById('earlyBadge');
+            const overtimeBadge = document.getElementById('overtimeBadge');
+
+            if (totalBadge) totalBadge.textContent = attendanceRecords.length;
+            if (ontimeBadge) ontimeBadge.textContent = ontime;
+            if (lateBadge) lateBadge.textContent = late;
+            if (absentBadge) absentBadge.textContent = absent;
+            if (earlyBadge) earlyBadge.textContent = early;
+            if (overtimeBadge) overtimeBadge.textContent = overtime;
         }
 
 
@@ -1432,7 +1593,11 @@
             if (isAdminAuthenticated) {
                 authGate.classList.add('hidden');
                 mainPanel.classList.remove('hidden');
+                
+                // Render Admin Components
                 renderAdminTeachers();
+                renderTable();
+                updateStatistics();
                 
                 // Set default geolocation values on input configs from active schoolLocation
                 document.getElementById('configLat').value = schoolLocation.latitude;
@@ -1511,7 +1676,6 @@
             if (trendChartInstance) trendChartInstance.destroy();
             if (statusChartInstance) statusChartInstance.destroy();
 
-            // 1. Line Chart: Trend Kehadiran Mingguan (7 Hari Terakhir)
             const ctxTrend = document.getElementById('trendAttendanceChart').getContext('2d');
             const gradientBg = ctxTrend.createLinearGradient(0, 0, 0, 300);
             gradientBg.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
@@ -1520,8 +1684,8 @@
             const historicalDates = ["19 Mei", "20 Mei", "21 Mei", "22 Mei", "23 Mei", "24 Mei", "Hari Ini"];
             const historicalPercentage = [0, 0, 0, 0, 0, 0]; // Empty starting state for production
             
-            const todayOntime = attendanceRecords.filter(r => r.status === "Masuk Tepat Waktu").length;
-            const todayTotalAbsen = attendanceRecords.filter(r => r.type === "MASUK").length;
+            const todayOntime = attendanceRecords.filter(r => r.status === "Masuk Tepat Waktu" || r.status === "Pulang Normal").length;
+            const todayTotalAbsen = attendanceRecords.length;
             const todayPercentage = todayTotalAbsen > 0 ? Math.round((todayOntime / todayTotalAbsen) * 100) : 0;
             
             const currentWeekData = [...historicalPercentage, todayPercentage];
@@ -1570,29 +1734,31 @@
                 }
             });
 
-            // 2. Doughnut Chart: Distribusi Status Hari Ini
+            // Doughnut Chart: Distribusi Status Hari Ini
             const ctxStatus = document.getElementById('statusTodayChart').getContext('2d');
             
             let ontime = 0;
             let late = 0;
+            let absent = 0;
             let early = 0;
             let overtime = 0;
 
             attendanceRecords.forEach(rec => {
-                if (rec.status === "Masuk Tepat Waktu") ontime++;
+                if (rec.status === "Masuk Tepat Waktu" || rec.status === "Pulang Normal") ontime++;
                 if (rec.status === "Terlambat") late++;
+                if (rec.status === "Dianggap Tidak Hadir") absent++;
                 if (rec.status === "Pulang Cepat") early++;
                 if (rec.status === "Pulang Lembur") overtime++;
             });
 
-            const hasData = (ontime + late + early + overtime > 0);
-            const chartData = hasData ? [ontime, late, early, overtime] : [1, 0, 0, 0];
-            const sliceColors = hasData ? ['#10b981', '#f59e0b', '#ef4444', '#06b6d4'] : ['#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0'];
+            const hasData = (ontime + late + absent + early + overtime > 0);
+            const chartData = hasData ? [ontime, late, absent, early, overtime] : [1, 0, 0, 0, 0];
+            const sliceColors = hasData ? ['#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4'] : ['#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0'];
 
             statusChartInstance = new Chart(ctxStatus, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Tepat Waktu', 'Terlambat', 'Pulang Cepat', 'Lembur'],
+                    labels: ['Tepat Waktu', 'Terlambat', 'Tidak Hadir', 'Pulang Cepat', 'Lembur'],
                     datasets: [{
                         data: chartData,
                         backgroundColor: sliceColors,
@@ -1626,31 +1792,31 @@
         function updateAdminCharts() {
             if (!isAdminAuthenticated || !trendChartInstance || !statusChartInstance) return;
 
-            // Recalculate and update today status percentages
             let ontime = 0;
             let late = 0;
+            let absent = 0;
             let early = 0;
             let overtime = 0;
 
             attendanceRecords.forEach(rec => {
-                if (rec.status === "Masuk Tepat Waktu") ontime++;
+                if (rec.status === "Masuk Tepat Waktu" || rec.status === "Pulang Normal") ontime++;
                 if (rec.status === "Terlambat") late++;
+                if (rec.status === "Dianggap Tidak Hadir") absent++;
                 if (rec.status === "Pulang Cepat") early++;
                 if (rec.status === "Pulang Lembur") overtime++;
             });
 
-            const hasData = (ontime + late + early + overtime > 0);
-            const updatedStatusData = hasData ? [ontime, late, early, overtime] : [1, 0, 0, 0];
-            const sliceColors = hasData ? ['#10b981', '#f59e0b', '#ef4444', '#06b6d4'] : ['#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0'];
+            const hasData = (ontime + late + absent + early + overtime > 0);
+            const updatedStatusData = hasData ? [ontime, late, absent, early, overtime] : [1, 0, 0, 0, 0];
+            const sliceColors = hasData ? ['#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4'] : ['#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0', '#e2e8f0'];
 
             statusChartInstance.data.datasets[0].data = updatedStatusData;
             statusChartInstance.data.datasets[0].backgroundColor = sliceColors;
             statusChartInstance.options.plugins.tooltip.enabled = hasData;
             statusChartInstance.update();
 
-            // Recalculate today's historical attendance value
-            const todayOntime = attendanceRecords.filter(r => r.status === "Masuk Tepat Waktu").length;
-            const todayTotalAbsen = attendanceRecords.filter(r => r.type === "MASUK").length;
+            const todayOntime = attendanceRecords.filter(r => r.status === "Masuk Tepat Waktu" || r.status === "Pulang Normal").length;
+            const todayTotalAbsen = attendanceRecords.length;
             const todayPercentage = todayTotalAbsen > 0 ? Math.round((todayOntime / todayTotalAbsen) * 100) : 0;
 
             trendChartInstance.data.datasets[0].data[6] = todayPercentage;
@@ -1718,21 +1884,28 @@
 
             teachers.push(formattedName);
             
+            // Persist the changes to LocalStorage
+            persistDatabase();
+
             nameInput.value = "";
             subjectInput.value = "";
 
             populateTeachersDropdown();
             renderAdminTeachers();
-            showCustomAlert("Berhasil Ditambahkan", `${formattedName} kini telah resmi terdaftar di database.`, true);
+            showCustomAlert("Berhasil Ditambahkan", `${formattedName} kini telah resmi terdaftar di database secara real-time.`, true);
         }
 
         // Remove existing teacher from list
         function removeTeacher(teacherName) {
             if (confirm(`Apakah Anda yakin ingin menghapus "${teacherName}" dari daftar guru?`)) {
                 teachers = teachers.filter(t => t !== teacherName);
+                
+                // Persist the changes to LocalStorage
+                persistDatabase();
+
                 populateTeachersDropdown();
                 renderAdminTeachers();
-                showCustomAlert("Berhasil Dihapus", `Kredensial ${teacherName} berhasil dicabut.`, false);
+                showCustomAlert("Berhasil Dihapus", `Kredensial ${teacherName} berhasil dicabut dari sistem.`, false);
             }
         }
 
@@ -1800,7 +1973,7 @@
                             jamMasuk = realRecordMasuk.time;
                             statusMasuk = realRecordMasuk.status;
                             statusTTD = realRecordMasuk.signature ? "Hadir & TTD Lengkap" : "Tanpa TTD";
-                            keterangan = "Hadir Kerja";
+                            keterangan = (realRecordMasuk.status === "Dianggap Tidak Hadir") ? "Hadir Hangus (Sangat Terlambat)" : "Hadir Kerja";
                         }
                         if (realRecordPulang) {
                             jamPulang = realRecordPulang.time;
@@ -1833,6 +2006,10 @@
         function clearAllLogs() {
             if (confirm("⚠️ PERINGATAN! Anda akan menghapus seluruh data logs absensi hari ini. Apakah Anda yakin?")) {
                 attendanceRecords = [];
+                
+                // Persist clear state
+                persistDatabase();
+
                 renderTable();
                 updateStatistics();
                 showCustomAlert("Pembersihan Sukses", "Seluruh database kehadiran hari ini telah berhasil dibersihkan.", true);
@@ -1853,7 +2030,6 @@
 
             populateTeachersDropdown();
 
-            renderTable();
             updateStatistics();
         };
     </script>
