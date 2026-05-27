@@ -98,8 +98,9 @@
     <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-cyan-500/20">
-                    <i class="fa-solid fa-microchip animate-pulse"></i>
+                <!-- LOGO SEKOLAH DENGAN URL BARU -->
+                <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-900/50 border border-slate-800 flex items-center justify-center shadow-lg shadow-cyan-500/10">
+                    <img src="https://iili.io/BprJ3qx.png" alt="Logo SMP Swasta Teknologi" class="w-10 h-10 object-contain p-0.5" onerror="this.src='https://api.dicebear.com/7.x/identicon/svg?seed=SMPST'">
                 </div>
                 <div>
                     <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
@@ -117,12 +118,12 @@
                 </div>
                 <div class="h-10 w-[1px] bg-slate-800 hidden md:block"></div>
                 
-                <!-- Navigasi ke Admin Panel -->
+                <!-- Navigasi ke Admin Panel (NAMA DIUBAH MENJADI 'ADMIN') -->
                 <button id="btn-toggle-admin" onclick="openAdminModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 text-sm font-semibold flex items-center gap-2 transition-colors">
-                    <i class="fa-solid fa-user-shield text-cyan-400"></i> Mode Admin
+                    <i class="fa-solid fa-user-shield text-cyan-400"></i> Admin
                 </button>
 
-                <!-- Info Guru Hack Aktif (Akan Tersembunyi saat di Portal) -->
+                <!-- Info Guru Hack/Aktif (Akan Tersembunyi saat di Portal) -->
                 <div id="active-user-widget" class="hidden flex items-center space-x-3 bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700">
                     <img id="widget-user-photo" src="" 
                          alt="Foto Profil Guru" 
@@ -145,9 +146,10 @@
         
         <!-- SECTION 1: PORTAL GURU (LOGIN / SELECT) -->
         <section id="portal-section" class="max-w-md mx-auto my-12 space-y-8">
+            <!-- LOGO SEKOLAH BESAR PADA PORTAL -->
             <div class="text-center space-y-2">
-                <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white font-black text-2xl mx-auto shadow-xl shadow-cyan-500/20 mb-4">
-                    <i class="fa-solid fa-users"></i>
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-tr from-cyan-500/10 to-blue-600/10 border border-slate-800/80 flex items-center justify-center mx-auto shadow-xl shadow-cyan-500/5 mb-4 p-2">
+                    <img src="https://iili.io/BprJ3qx.png" alt="Logo SMP Swasta Teknologi" class="w-16 h-16 object-contain" onerror="this.src='https://api.dicebear.com/7.x/identicon/svg?seed=SMPST'">
                 </div>
                 <h2 class="text-2xl font-extrabold text-white">Portal Absensi Guru</h2>
                 <p class="text-slate-400 text-sm">Silakan pilih nama Anda dari daftar pengajar SMP Swasta Teknologi untuk mulai absen harian.</p>
@@ -376,13 +378,15 @@
         <section id="admin-section" class="hidden space-y-8">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
+                    <!-- NAMA MODE ADMIN DIGANTI MENJADI 'ADMIN' -->
                     <h2 class="text-2xl font-black text-white flex items-center gap-3">
                         <i class="fa-solid fa-user-shield text-cyan-400"></i> Panel Manajemen Sekolah & Absensi
                     </h2>
                     <p class="text-slate-400 text-sm">Kelola pengajar, visualisasikan statistika kehadiran harian, dan unduh laporan absensi resmi.</p>
                 </div>
+                <!-- TOMBOL KELUAR DIUBAH MENJADI 'KELUAR ADMIN' -->
                 <button onclick="exitAdminMode()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-rose-400 border border-slate-800 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Mode Admin
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar Admin
                 </button>
             </div>
 
@@ -543,10 +547,10 @@
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h3 class="text-lg font-bold text-white">Masukkan PIN Admin</h3>
-                <p class="text-xs text-slate-400">Sistem mendeteksi akses manajemen. Masukkan PIN Admin untuk melanjutkan.</p>
+                <p class="text-xs text-slate-400 font-medium">Sistem mendeteksi akses manajemen. Masukkan PIN Admin untuk melanjutkan.</p>
             </div>
             <div class="space-y-3">
-                <input id="admin-pin-input" type="password" placeholder="PIN Default: 1234" class="w-full text-center tracking-widest bg-slate-900 border border-slate-800 rounded-lg py-3 text-lg font-bold text-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
+                <input id="admin-pin-input" type="password" placeholder="••••" class="w-full text-center tracking-widest bg-slate-900 border border-slate-800 rounded-lg py-3 text-lg font-bold text-white focus:outline-none focus:ring-1 focus:ring-cyan-500">
                 <div class="flex gap-3">
                     <button onclick="closeAdminModal()" class="flex-1 py-2.5 bg-slate-900 text-slate-300 text-sm font-semibold rounded-lg border border-slate-800">Batal</button>
                     <button onclick="verifyAdminPIN()" class="flex-1 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-sm font-semibold rounded-lg">Masuk</button>
@@ -927,6 +931,7 @@
             return null;
         }
 
+        // Kunci perangkat ke guru tertentu setelah absen
         function lockDeviceToTeacher(teacherId, teacherName) {
             const todayStr = new Date().toDateString();
             const lockData = { date: todayStr, teacherId: teacherId, teacherName: teacherName };
@@ -1203,6 +1208,7 @@
             }
         }
 
+        // Memperbarui teks koordinat sekolah di layar
         function updateSchoolCoordinatesText() {
             const coordEl = document.getElementById('school-coords-text');
             if (coordEl) {
